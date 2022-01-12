@@ -13,8 +13,8 @@ class RecipeController(
         return recipeService.save(request)
     }
 
-    @GetMapping("/get/{name}")
-    fun getByName(@PathVariable name: String): Recipe {
-        return recipeService.findRecipeByName(name);
+    @PostMapping("/get")
+    fun getByName(@RequestBody request: RecipeDTO): List<Recipe> {
+        return (recipeService.findRecipe(request))
     }
 }

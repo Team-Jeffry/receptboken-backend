@@ -8,4 +8,5 @@ interface RecipeRepository : MongoRepository<Recipe, String> {
     fun findRecipeByName(name: String): Recipe
     fun findRecipesByCategories(categories: List<Category>): List<Recipe>
     fun findRecipesByTime(time: Int): List<Recipe>
+    fun findRecipesByNameAndCategoriesAndTime(name: String, categories: List<Category>, time: Int): List<Recipe>
 }
