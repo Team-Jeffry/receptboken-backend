@@ -9,6 +9,7 @@ class RecipeService(
     }
 
     fun findRecipeByName(name: String): Recipe {
+        println("found!")
         return recipeRepository.findRecipeByName(name)
     }
 
