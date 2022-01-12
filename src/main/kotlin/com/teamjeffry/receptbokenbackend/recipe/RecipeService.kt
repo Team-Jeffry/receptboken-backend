@@ -4,11 +4,12 @@ class RecipeService(
     private val recipeRepository: RecipeRepository
 ) {
     fun save(request: Recipe): Recipe {
-        return recipeRepository.save(request);
+        println("Saved!")
+        return recipeRepository.save(request)
     }
 
     fun findRecipeByName(name: String): Recipe {
-        return recipeRepository.findRecipeByName(name);
+        return recipeRepository.findRecipeByName(name)
     }
 
 
