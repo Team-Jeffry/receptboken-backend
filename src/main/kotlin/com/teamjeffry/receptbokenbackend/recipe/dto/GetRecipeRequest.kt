@@ -1,7 +1,7 @@
 package com.teamjeffry.receptbokenbackend.recipe.dto
 
-data class FindRecipeRequest(
+data class GetRecipeRequest(
     val recipeName: String,
-    val categoryName: String,
+    val categoryNames: List<String>,
     val time: Int
 )

@@ -4,7 +4,7 @@ import com.teamjeffry.receptbokenbackend.category.CategoryRepository
 import com.teamjeffry.receptbokenbackend.category.Category
 import com.teamjeffry.receptbokenbackend.ingredient.Ingredient
 import com.teamjeffry.receptbokenbackend.ingredient.IngredientRepository
-import com.teamjeffry.receptbokenbackend.recipe.dto.FindRecipeRequest
+import com.teamjeffry.receptbokenbackend.recipe.dto.GetRecipeRequest
 import com.teamjeffry.receptbokenbackend.recipe.dto.SaveRecipeRequest
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
@@ -43,22 +43,51 @@ class RecipeService(
         return recipeRepository.save(recipe)
     }
 
-    fun findRecipe(request: FindRecipeRequest): List<Recipe> {
-        if (request.categoryName.isBlank() && request.time == 0 && request.recipeName.isNotBlank()) {
-            return listOf(recipeRepository.findRecipeByName(request.recipeName))
+    fun getRecipe(request: GetRecipeRequest): List<Recipe> {
+
+        val categoriesFromDb: List<Category> = request.categoryNames
+            .filter { categoryRepository.existsByName(it) }
+            .map { categoryRepository.findCategoryByName(it) }
+        val recipeName: String = request.recipeName
+        val time: Int = request.time
+
+        // Will only search for name of the recipe
+        if (categoriesFromDb.isEmpty() && time == 0 && recipeName.isNotEmpty()) {
+            return listOf(recipeRepository.findRecipeByName(recipeName))
         }
-        if (request.recipeName.isBlank() && request.categoryName.isBlank() && request.time != 0) {
-            return recipeRepository.findRecipesByTime(request.time)
+
+        // Will only search with categories
+        if (recipeName.isEmpty() && time == 0 && categoriesFromDb.isNotEmpty()) {
+            return recipeRepository.findRecipesByCategories(categoriesFromDb)
         }
-        if (request.recipeName.isBlank() && request.time == 0 && request.categoryName.isNotBlank()) {
-            return recipeRepository.findRecipesByCategories(listOf(categoryRepository.findCategoryByName(request.categoryName)))
+
+        // Will only search for time
+        if (categoriesFromDb.isEmpty() && recipeName.isEmpty() && time != 0) {
+            return recipeRepository.findRecipesByTime(time)
         }
-        return recipeRepository.findRecipesByNameAndCategoriesAndTime(
-            request.recipeName,
-            listOf(categoryRepository.findCategoryByName(request.categoryName)),
-            request.time
+
+        // Will search for name and categories
+        if (time == 0 && categoriesFromDb.isNotEmpty() && recipeName.isNotEmpty()) {
+            return listOf(recipeRepository.findRecipeByNameAndCategories(recipeName, categoriesFromDb))
+        }
+
+        // Will search for name and time
+        if (categoriesFromDb.isEmpty() && recipeName.isNotEmpty() && time != 0) {
+            return listOf(recipeRepository.findRecipeByNameAndTime(recipeName, time))
+        }
+
+        // Will search for categories and time
+        if (recipeName.isEmpty() && categoriesFromDb.isNotEmpty() && time != 0) {
+            return recipeRepository.findRecipesByCategoriesAndTime(categoriesFromDb, time)
+        }
+
+        // Will search for all three fields
+        return listOf(
+            recipeRepository.findRecipeByNameAndCategoriesAndTime(
+                recipeName,
+                categoriesFromDb,
+                time
+            )
         )
     }
-
-
 }
