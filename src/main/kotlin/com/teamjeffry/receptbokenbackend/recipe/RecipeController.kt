@@ -2,6 +2,7 @@ package com.teamjeffry.receptbokenbackend.recipe
 
 import org.springframework.web.bind.annotation.*
 
+@CrossOrigin("http://localhost:3000/")
 @RestController
 @RequestMapping("v1/recipe")
 class RecipeController(
