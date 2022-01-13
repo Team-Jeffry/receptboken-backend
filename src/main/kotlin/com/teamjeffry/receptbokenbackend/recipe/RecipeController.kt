@@ -1,5 +1,6 @@
 package com.teamjeffry.receptbokenbackend.recipe
 
+import com.teamjeffry.receptbokenbackend.recipe.dto.SaveRecipeRequest
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -9,7 +10,7 @@ class RecipeController(
 ) {
 
     @PostMapping("/save")
-    fun save(@RequestBody request: Recipe): Recipe {
+    fun save(@RequestBody request: SaveRecipeRequest): Recipe {
         return recipeService.save(request)
     }
 

@@ -18,4 +18,4 @@ data class Recipe(
     val time: Int,
     val ingredients: List<Ingredient>,
     val categories: List<Category>
-    )
+)
