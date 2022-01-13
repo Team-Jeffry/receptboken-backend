@@ -16,6 +16,7 @@ class RecipeService(
     private val ingredientRepository: IngredientRepository
 ) {
 
+    @Transactional
     fun save(request: SaveRecipeRequest): Recipe {
 
         request.ingredients
