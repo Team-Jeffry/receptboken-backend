@@ -39,10 +39,11 @@ class RecipeService(
             categories = categoriesFromDb
         )
 
+        println("Saved!")
         return recipeRepository.save(recipe)
     }
 
     fun findRecipeByName(name: String): Recipe {
-        return recipeRepository.findRecipeByName(name);
+        return recipeRepository.findRecipeByName(name)
     }
 }
