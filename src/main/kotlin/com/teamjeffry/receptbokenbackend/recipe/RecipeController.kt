@@ -1,5 +1,6 @@
 package com.teamjeffry.receptbokenbackend.recipe
 
+import com.teamjeffry.receptbokenbackend.ingredient.Ingredient
 import com.teamjeffry.receptbokenbackend.recipe.dto.SaveRecipeRequest
 import org.springframework.web.bind.annotation.*
 
@@ -18,5 +19,10 @@ class RecipeController(
     @GetMapping("/get/{name}")
     fun getByName(@PathVariable name: String): Recipe {
         return recipeService.findRecipeByName(name);
+    }
+
+    @PostMapping("/suggest")
+    fun suggest(@RequestBody ingredients: List<Ingredient>): List<Recipe> {
+        return recipeService.suggest(ingredients)
     }
 }

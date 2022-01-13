@@ -16,10 +16,11 @@ class ReceptbokenBackendApplication {
     fun run(categoryRepository: CategoryRepository): CommandLineRunner {
         return CommandLineRunner { args ->
             
-            categoryRepository.removeAllBy()
+            categoryRepository.deleteAll()
 
             categoryRepository.save(Category(ObjectId.get(), "Frukt", "Närodlad och ekologisk"))
-            categoryRepository.save(Category(ObjectId.get(), "Test", "En Testkategori"))
+            categoryRepository.save(Category(ObjectId.get(), "Frukost", "Gott på morgonen!"))
+            categoryRepository.save(Category(ObjectId.get(), "Mellanmål", "Goda mellanmål!"))
         }
     }
 }
