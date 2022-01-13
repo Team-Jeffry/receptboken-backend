@@ -1,7 +1,10 @@
 package com.teamjeffry.receptbokenbackend.recipe
 
+import com.teamjeffry.receptbokenbackend.recipe.dto.GetRecipeRequest
 import com.teamjeffry.receptbokenbackend.ingredient.Ingredient
 import com.teamjeffry.receptbokenbackend.recipe.dto.SaveRecipeRequest
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @CrossOrigin("http://localhost:3000/")
@@ -12,13 +15,13 @@ class RecipeController(
 ) {
 
     @PostMapping("/save")
-    fun save(@RequestBody request: SaveRecipeRequest): Recipe {
-        return recipeService.save(request)
+    fun save(@RequestBody request: SaveRecipeRequest): ResponseEntity<Recipe> {
+        return ResponseEntity<Recipe>(recipeService.save(request), HttpStatus.OK)
     }
 
-    @GetMapping("/get/{name}")
-    fun getByName(@PathVariable name: String): Recipe {
-        return recipeService.findRecipeByName(name);
+    @PostMapping("/get")
+    fun getRecipe(@RequestBody request: GetRecipeRequest): ResponseEntity<List<Recipe>> {
+        return ResponseEntity<List<Recipe>>(recipeService.getRecipe(request), HttpStatus.OK)
     }
 
     @PostMapping("/suggest")
