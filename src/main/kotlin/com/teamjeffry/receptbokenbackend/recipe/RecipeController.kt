@@ -17,7 +17,7 @@ class RecipeController(
     }
 
     @PostMapping("/get")
-    fun getByName(@RequestBody request: FindRecipeRequest): List<Recipe> {
+    fun getRecipe(@RequestBody request: FindRecipeRequest): List<Recipe> {
         return (recipeService.findRecipe(request))
     }
 }
