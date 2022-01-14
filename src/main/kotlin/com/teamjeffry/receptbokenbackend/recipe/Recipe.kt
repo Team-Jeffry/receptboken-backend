@@ -5,6 +5,7 @@ import com.teamjeffry.receptbokenbackend.category.Category
 import com.teamjeffry.receptbokenbackend.ingredient.Ingredient
 import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.mapping.DBRef
 import org.springframework.data.mongodb.core.mapping.Document
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -16,6 +17,10 @@ data class Recipe(
     val description: String,
     val instruction: String,
     val time: Int,
+
+    @DBRef
     val ingredients: List<Ingredient>,
+
+    @DBRef
     val categories: List<Category>
 )

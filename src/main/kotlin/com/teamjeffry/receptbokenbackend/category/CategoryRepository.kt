@@ -8,6 +8,4 @@ interface CategoryRepository : MongoRepository<Category, String> {
     fun save(category: Category): Category
     fun findCategoryByName(name: String): Category
     fun existsByName(name: String): Boolean
-    fun removeAllBy()
-
 }

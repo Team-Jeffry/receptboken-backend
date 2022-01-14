@@ -1,6 +1,7 @@
 package com.teamjeffry.receptbokenbackend.recipe
 
 import com.teamjeffry.receptbokenbackend.recipe.dto.GetRecipeRequest
+import com.teamjeffry.receptbokenbackend.ingredient.Ingredient
 import com.teamjeffry.receptbokenbackend.recipe.dto.SaveRecipeRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -21,5 +22,10 @@ class RecipeController(
     @PostMapping("/get")
     fun getRecipe(@RequestBody request: GetRecipeRequest): ResponseEntity<List<Recipe>> {
         return ResponseEntity<List<Recipe>>(recipeService.getRecipe(request), HttpStatus.OK)
+    }
+
+    @PostMapping("/suggest")
+    fun suggest(@RequestBody ingredients: List<Ingredient>): List<Recipe> {
+        return recipeService.suggest(ingredients)
     }
 }
