@@ -20,12 +20,12 @@ class RecipeController(
     }
 
     @PostMapping("/get")
-    fun getRecipe(@RequestBody request: GetRecipeRequest): ResponseEntity<List<Recipe>> {
+    fun get(@RequestBody request: GetRecipeRequest): ResponseEntity<List<Recipe>> {
         return ResponseEntity<List<Recipe>>(recipeService.getRecipe(request), HttpStatus.OK)
     }
 
     @PostMapping("/suggest")
-    fun suggest(@RequestBody ingredients: List<Ingredient>): List<Recipe> {
-        return recipeService.suggest(ingredients)
+    fun suggest(@RequestBody ingredients: List<Ingredient>): ResponseEntity<List<Recipe>> {
+        return ResponseEntity<List<Recipe>>(recipeService.suggest(ingredients), HttpStatus.OK)
     }
 }
