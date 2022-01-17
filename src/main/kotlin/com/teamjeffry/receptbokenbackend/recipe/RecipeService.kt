@@ -47,7 +47,7 @@ class RecipeService(
     fun getRecipe(request: GetRecipeRequest): List<Recipe> {
 
         val categoriesFromDb: List<Category> = request.categoryNames
-            .filter { categoryRepository.existsByName(it) }
+            .filter { categoryRepository.existsByName(it.lowercase()) }
             .map { categoryRepository.findCategoryByName(it) }
         val recipeName: String = request.recipeName
         val time: Int = request.time
