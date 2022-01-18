@@ -3,31 +3,25 @@ version: '3.8'
 services:
   mongo:
     image: mongo:latest
-    ports:
-      - "27017:27017"
     volumes:
       - db-data:/data/db/recipe-db
-    networks:
-      - receptboken-mongo-network
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: recipe-db
 
   app:
     image: teamjeffry/receptboken:latest
     ports:
       - "8080:8080"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: password
-      MONGO_INITDB_DATABASE: recipe-db
+      DB_USER: root
+      DB_PASS: password
+      DB_DATABASE: recipe-db
       DB_HOST: mongo
-    networks:
-      - receptboken-mongo-network
     depends_on:
       - mongo
 
 volumes:
   db-data:
     driver: local
-
-networks:
-  receptboken-mongo-network:
-    driver: bridge
