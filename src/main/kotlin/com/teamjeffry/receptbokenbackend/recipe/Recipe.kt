@@ -21,6 +21,5 @@ data class Recipe(
     @DBRef
     val ingredients: List<Ingredient>,
 
-    @DBRef
     val categories: List<Category>
 )
