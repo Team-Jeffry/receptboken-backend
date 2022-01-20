@@ -59,7 +59,7 @@ class RecipeService(
 
         // Will only search with categories
         if (recipeName.isEmpty() && time == 0 && categoriesFromDb.isNotEmpty()) {
-            return recipeRepository.findRecipesByCategories(categoriesFromDb)
+            return recipeRepository.findRecipesByCategoriesContaining(categoriesFromDb)
         }
 
         // Will only search for time
@@ -69,7 +69,7 @@ class RecipeService(
 
         // Will search for name and categories
         if (time == 0 && categoriesFromDb.isNotEmpty() && recipeName.isNotEmpty()) {
-            return listOf(recipeRepository.findRecipeByNameAndCategories(recipeName, categoriesFromDb))
+            return listOf(recipeRepository.findRecipeByNameAndCategoriesContaining(recipeName, categoriesFromDb))
         }
 
         // Will search for name and time
@@ -79,13 +79,13 @@ class RecipeService(
 
         // Will search for categories and time
         if (recipeName.isEmpty() && categoriesFromDb.isNotEmpty() && time != 0) {
-            return recipeRepository.findRecipesByCategoriesAndTime(categoriesFromDb, time)
+            return recipeRepository.findRecipesByCategoriesContainingAndTime(categoriesFromDb, time)
         }
 
         // Will search for all three fields
         if (recipeName.isNotEmpty() && categoriesFromDb.isNotEmpty() && time != 0) {
             return listOf(
-                recipeRepository.findRecipeByNameAndCategoriesAndTime(
+                recipeRepository.findRecipeByNameAndCategoriesContainingAndTime(
                     recipeName,
                     categoriesFromDb,
                     time
