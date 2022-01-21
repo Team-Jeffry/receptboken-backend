@@ -54,7 +54,7 @@ class RecipeService(
 
         // Will only search for name of the recipe
         if (categoriesFromDb.isEmpty() && time == 0 && recipeName.isNotEmpty()) {
-            return listOf(recipeRepository.findRecipeByName(recipeName))
+            return recipeRepository.findRecipesByNameContaining(recipeName)
         }
 
         // Will only search with categories
@@ -69,12 +69,12 @@ class RecipeService(
 
         // Will search for name and categories
         if (time == 0 && categoriesFromDb.isNotEmpty() && recipeName.isNotEmpty()) {
-            return listOf(recipeRepository.findRecipeByNameAndCategoriesContaining(recipeName, categoriesFromDb))
+            return recipeRepository.findRecipesByNameContainingAndCategoriesContaining(recipeName, categoriesFromDb)
         }
 
         // Will search for name and time
         if (categoriesFromDb.isEmpty() && recipeName.isNotEmpty() && time != 0) {
-            return listOf(recipeRepository.findRecipeByNameAndTime(recipeName, time))
+            return recipeRepository.findRecipesByNameContainingAndTime(recipeName, time)
         }
 
         // Will search for categories and time
@@ -84,15 +84,13 @@ class RecipeService(
 
         // Will search for all three fields
         if (recipeName.isNotEmpty() && categoriesFromDb.isNotEmpty() && time != 0) {
-            return listOf(
-                recipeRepository.findRecipeByNameAndCategoriesContainingAndTime(
-                    recipeName,
-                    categoriesFromDb,
-                    time
-                )
+            return recipeRepository.findRecipesByNameContainingAndCategoriesContainingAndTime(
+                recipeName,
+                categoriesFromDb,
+                time
             )
         }
-       return listOf()
+        return listOf()
     }
 
     fun suggest(ingredients: List<Ingredient>): List<Recipe> {
@@ -102,11 +100,12 @@ class RecipeService(
 
         allRecipes.forEach {
             var count = 0
-            it.ingredients.map { ingredient ->  ingredient.name.lowercase() }
+            it.ingredients.map { ingredient -> ingredient.name.lowercase() }
                 .forEach { name ->
-                    count = if (ingredients.map { ingredient -> ingredient.name.lowercase() }.contains(name.lowercase()))
-                        count + 1
-                    else count
+                    count =
+                        if (ingredients.map { ingredient -> ingredient.name.lowercase() }.contains(name.lowercase()))
+                            count + 1
+                        else count
                 }
 
             if (count > 0)
