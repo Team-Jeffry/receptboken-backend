@@ -47,19 +47,19 @@ class RecipeService(
     fun getRecipe(request: GetRecipeRequest): List<Recipe> {
 
         val categoriesFromDb: List<Category> = request.categoryNames
-            .filter { categoryRepository.existsByName(it.lowercase()) }
+            .filter { categoryRepository.existsByName(it) }
             .map { categoryRepository.findCategoryByName(it) }
         val recipeName: String = request.recipeName
         val time: Int = request.time
 
         // Will only search for name of the recipe
         if (categoriesFromDb.isEmpty() && time == 0 && recipeName.isNotEmpty()) {
-            return listOf(recipeRepository.findRecipeByName(recipeName))
+            return recipeRepository.findRecipesByNameContaining(recipeName)
         }
 
         // Will only search with categories
         if (recipeName.isEmpty() && time == 0 && categoriesFromDb.isNotEmpty()) {
-            return recipeRepository.findRecipesByCategories(categoriesFromDb)
+            return recipeRepository.findRecipesByCategoriesContaining(categoriesFromDb)
         }
 
         // Will only search for time
@@ -69,48 +69,50 @@ class RecipeService(
 
         // Will search for name and categories
         if (time == 0 && categoriesFromDb.isNotEmpty() && recipeName.isNotEmpty()) {
-            return listOf(recipeRepository.findRecipeByNameAndCategories(recipeName, categoriesFromDb))
+            return recipeRepository.findRecipesByNameContainingAndCategoriesContaining(recipeName, categoriesFromDb)
         }
 
         // Will search for name and time
         if (categoriesFromDb.isEmpty() && recipeName.isNotEmpty() && time != 0) {
-            return listOf(recipeRepository.findRecipeByNameAndTime(recipeName, time))
+            return recipeRepository.findRecipesByNameContainingAndTime(recipeName, time)
         }
 
         // Will search for categories and time
         if (recipeName.isEmpty() && categoriesFromDb.isNotEmpty() && time != 0) {
-            return recipeRepository.findRecipesByCategoriesAndTime(categoriesFromDb, time)
+            return recipeRepository.findRecipesByCategoriesContainingAndTime(categoriesFromDb, time)
         }
 
         // Will search for all three fields
-        return listOf(
-            recipeRepository.findRecipeByNameAndCategoriesAndTime(
+        if (recipeName.isNotEmpty() && categoriesFromDb.isNotEmpty() && time != 0) {
+            return recipeRepository.findRecipesByNameContainingAndCategoriesContainingAndTime(
                 recipeName,
                 categoriesFromDb,
                 time
             )
-        )
+        }
+        return listOf()
     }
 
     fun suggest(ingredients: List<Ingredient>): List<Recipe> {
 
         val allRecipes = recipeRepository.findAll()
-        val rankedRecipies = mutableListOf<RankedRecipe>()
+        val rankedRecipes = mutableListOf<RankedRecipe>()
 
         allRecipes.forEach {
             var count = 0
-            it.ingredients.map { ingredient ->  ingredient.name.lowercase() }
+            it.ingredients.map { ingredient -> ingredient.name.lowercase() }
                 .forEach { name ->
-                    count = if (ingredients.map { ingredient -> ingredient.name.lowercase() }.contains(name.lowercase()))
-                        count + 1
-                    else count
+                    count =
+                        if (ingredients.map { ingredient -> ingredient.name.lowercase() }.contains(name.lowercase()))
+                            count + 1
+                        else count
                 }
 
             if (count > 0)
-                rankedRecipies.add(RankedRecipe(count, it))
+                rankedRecipes.add(RankedRecipe(count, it))
         }
 
-        return rankedRecipies.sortedByDescending { it.ranking }
+        return rankedRecipes.sortedByDescending { it.ranking }
             .map { it.recipe }
     }
 }
