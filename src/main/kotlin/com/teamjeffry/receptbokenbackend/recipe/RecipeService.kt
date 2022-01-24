@@ -33,7 +33,7 @@ class RecipeService(
 
         val recipe: Recipe = Recipe(
             id = ObjectId.get(),
-            name = request.name,
+            name = request.name.lowercase(),
             description = request.description,
             instruction = request.instruction,
             time = request.time,
@@ -49,7 +49,7 @@ class RecipeService(
         val categoriesFromDb: List<Category> = request.categoryNames
             .filter { categoryRepository.existsByName(it) }
             .map { categoryRepository.findCategoryByName(it) }
-        val recipeName: String = request.recipeName
+        val recipeName: String = request.recipeName.lowercase()
         val time: Int = request.time
 
         // Will only search for name of the recipe

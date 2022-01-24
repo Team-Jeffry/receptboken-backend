@@ -84,7 +84,7 @@ class Config {
         recipeRepository.save(
             Recipe(
                 ObjectId.get(),
-                name = "Fruktsallad med jordgubbar och banan",
+                name = "fruktsallad med jordgubbar och banan",
                 description = "Enkel Fruktsallad med Jordgubbar och Banan",
                 instruction = "Hacka frukten och blanda i en skål.",
                 time = 15, ingredients = listOf(
@@ -102,7 +102,7 @@ class Config {
         recipeRepository.save(
             Recipe(
                 ObjectId.get(),
-                name = "Fruktsallad med banan",
+                name = "fruktsallad med banan",
                 description = "Enkel Fruktsallad med Banan",
                 instruction = "Hacka frukten och blanda i en skål.",
                 time = 13, ingredients = listOf(
@@ -119,7 +119,7 @@ class Config {
         recipeRepository.save(
             Recipe(
                 ObjectId.get(),
-                name = "Havregrynsgröt",
+                name = "havregrynsgröt",
                 description = "Enkel snabb frukost",
                 instruction = "Koka försiktigt upp havregrynen i en kastrull med en nypa salt",
                 time = 10, ingredients = listOf(
