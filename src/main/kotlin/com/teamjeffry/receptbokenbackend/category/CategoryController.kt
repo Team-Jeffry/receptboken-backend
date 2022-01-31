@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@CrossOrigin("http://localhost:3000/")
+@CrossOrigin
 @RequestMapping("/v1/category")
 class CategoryController(
     private val categoryRepository: CategoryRepository
