@@ -31,6 +31,7 @@ class Config {
         categoryRepository.save(Category(ObjectId.get(), "Veganskt", "Mat för veganer"))
         categoryRepository.save(Category(ObjectId.get(), "Glutenfritt", "Glutenfria recept"))
         categoryRepository.save(Category(ObjectId.get(), "Amerikanskt", "Bra för själen, dåligt för hjärtat"))
+        categoryRepository.save(Category(ObjectId.get(), "Ingen kategori", "Ingen kategori specificerad"))
         return "Created Categories"
     }
 
