@@ -20,16 +20,19 @@ class RecipeService(
     @Transactional
     fun save(request: SaveRecipeRequest): Recipe {
 
-        request.ingredients
-            .filter { !ingredientRepository.existsByName(it.name) }
-            .forEach { ingredientRepository.save(it.copy(id = ObjectId.get())) }
+        saveNewIngredientsIfNotExists(request.ingredientNames);
 
         val ingredientsFromDb: List<Ingredient> =
-            request.ingredients.map { ingredientRepository.findIngredientByName(it.name) }
+            request.ingredientNames.map { ingredientRepository.findIngredientByName(it) }
 
-        val categoriesFromDb: List<Category> = request.categoryNames
+        val categoriesFromDb: MutableList<Category> = request.categoryNames
             .filter { categoryRepository.existsByName(it) }
             .map { categoryRepository.findCategoryByName(it) }
+            .toMutableList()
+
+        if (categoriesFromDb.isEmpty()) {
+            categoriesFromDb.add(categoryRepository.findCategoryByName("Ingen kategori"))
+        }
 
         val recipe: Recipe = Recipe(
             id = ObjectId.get(),
@@ -42,6 +45,16 @@ class RecipeService(
         )
 
         return recipeRepository.save(recipe)
+    }
+
+    fun saveNewIngredientsIfNotExists(ingredientNames: List<String>) {
+        ingredientNames
+            .filter { !ingredientRepository.existsByName(it) }
+            .forEach {
+                ingredientRepository.save(
+                    Ingredient(id = ObjectId.get(), name = it, description = "No Description")
+                )
+            }
     }
 
     fun getRecipe(request: GetRecipeRequest): List<Recipe> {
@@ -95,6 +108,8 @@ class RecipeService(
 
     fun suggest(ingredients: List<Ingredient>): List<Recipe> {
 
+        data class RankedRecipe(val ranking: Int, val recipe: Recipe)
+
         val allRecipes = recipeRepository.findAll()
         val rankedRecipes = mutableListOf<RankedRecipe>()
 
@@ -116,5 +131,3 @@ class RecipeService(
             .map { it.recipe }
     }
 }
-
-data class RankedRecipe(val ranking: Int, val recipe: Recipe)
